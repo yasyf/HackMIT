@@ -21,7 +21,7 @@
 			curl_close($ch);
 		}
 		else if ($_REQUEST['submit'] == "get") {
-			$url = $url."?".http_build_query($post_data);
+			$url = $url."?".str_replace('+', '%20', http_build_query($post_data));
 			$response = file_get_contents($url);
 		}
 	}
@@ -47,11 +47,11 @@
 <input type="text" name="endpoint" placeholder="Endpoint" value="<?php echo $_SESSION['endpoint']; ?>">/<input type="text" name="method" placeholder="Method" value="<?php echo $_SESSION['method']; ?>">
 </div>
 <br />
+<input type="hidden" id="ncounter" name="n" value="<?php echo $_SESSION['n']; ?>"><br />
+<div id="toadd">
 <div class="form-group">
 <input type="text" name="k1" value="<?php echo $_SESSION['k1']; ?>" placeholder="Key">&nbsp;:&nbsp;<input type="text" name="v1" value="<?php echo $_SESSION['v1']; ?>" placeholder="Value">
 </div>
-<input type="hidden" id="ncounter" name="n" value="<?php echo $_SESSION['n']; ?>"><br />
-<div id="toadd">
 <?php
 for($i=2;$i<=$_SESSION['n'];$i++){
 	echo '<div class="form-group"><input type="text" name="k'.$i.'" value="'.$_SESSION["k$i"].'" placeholder="Key">&nbsp;/&nbsp;<input type="text" name="v'.$i.'" value="'.$_SESSION["v$i"].'" placeholder="Value"></div>';
