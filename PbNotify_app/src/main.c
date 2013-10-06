@@ -71,8 +71,10 @@ void handle_http_success(int32_t request_id, int http_status, DictionaryIterator
   message = "Could not connect to API";
   }
   else {
-  //source = "HackMIT";
-  //message = "No New Messages";
+    if(strcmp(source,"Error")){
+      source = "PbNotify";
+      message = "No New Messages";
+    }
   return;
   }
   text_layer_set_text(&source_layer, source);
@@ -106,16 +108,16 @@ void handle_init(AppContextRef ctx) {
   
   window_set_click_config_provider(&window, (ClickConfigProvider) config_provider);
   
-  text_layer_init(&source_layer, GRect(-5, 0, 144, 30));
+  text_layer_init(&source_layer, GRect(0, 0, 144, 30));
   text_layer_set_text_alignment(&source_layer, GTextAlignmentCenter);
   text_layer_set_text(&source_layer, source);
-  text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+  text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(&window.layer, &source_layer.layer);
   
-  scroll_layer_init(&scroll_layer, GRect(-5, 30, 155, 110));
+  scroll_layer_init(&scroll_layer, GRect(0, 40, 144, 110));
   scroll_layer_set_click_config_onto_window(&scroll_layer, &window);
   
-  text_layer_init(&message_layer, GRect(0, 0, 150, 2000));
+  text_layer_init(&message_layer, GRect(0, 0, 144, 2000));
   text_layer_set_text_alignment(&message_layer, GTextAlignmentCenter);
   text_layer_set_font(&message_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   text_layer_set_text(&message_layer, message);
