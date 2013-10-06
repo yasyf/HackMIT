@@ -6,9 +6,9 @@
 	<div>
 	 <ul>
 	  {% for notification in notifications %}
-	  	{% if notification.delivered %} <del> {% endif %}
+	  	{% if notification.delivered == "true" %} <del> {% endif %}
 		<li>(<i>{{ notification.time }}</i>) <b>{{ notification.text }}</b>: {{ notification.text }}</li>
-		{% if notification.delivered %} </del> {% endif %}
+		{% if notification.delivered == "true" %} </del> {% endif %}
 	  {% endfor %}
 	 </ul>
 	</div>
