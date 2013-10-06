@@ -1,5 +1,9 @@
 /*
+ * Developed by Yasyf Mohamedali @ HackMIT 2013
+ * https://github.com/yasyf/HackMIT
+ * 
  * Adapted from https://github.com/pebble/hackmit-2013/blob/ac954efc153646a093bc0cbe1a6864d90d86980d/isstracker-http/src/http.c
+ *
  */
 #include "pebble_os.h"
 #include "pebble_app.h"
@@ -12,7 +16,7 @@
 #define DELIVEREDURL "http://yasyf.scripts.mit.edu:8080/api/notification/delivered/"
   
 PBL_APP_INFO(HTTP_UUID,
-             "HackMIT", "Yasyf Mohamedali",
+             "PbNotify", "Yasyf Mohamedali",
              1, 0, /* App version */
              DEFAULT_MENU_ICON,
              APP_INFO_WATCH_FACE); //or APP_INFO_STANDARD_APP, your call
@@ -21,7 +25,7 @@ Window window;
 ScrollLayer scroll_layer; 
 TextLayer source_layer;
 TextLayer message_layer;
-static char* source = "HackMIT";
+static char* source = "PbNotify";
 static char* message = "No New Messages";
 int error = 0;
 bool confirming = false;

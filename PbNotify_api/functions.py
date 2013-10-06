@@ -63,6 +63,8 @@ def show_error(text):
 	return json_encode("error",text)
 		
 def mark_notification_delivered(userid, delivered):
+	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
+			return json_encode("error", "no new messages")
 	if delivered == True:
 		status = "true"
 	else:

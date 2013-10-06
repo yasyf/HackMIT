@@ -7,34 +7,50 @@ Simply start up the server, entering in your own secret key and database informa
 
 ###create new notification
 ####/notification/create/
-#####{endpoint}/api/notification/create/<userid>/<source>/<text>
+#####{endpoint}/api/notification/create/&lt;userid&gt;/&lt;source&gt;/&lt;text&gt;
 	userid: your generated userid
 	source: the originating entity of your notification
 	text: the text of your notification
 	
 	returns: json-encoded notificationid
+	
+	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/create/5250a011dabae068d13ee5f4/Test/HelloWorld"
+	{"notificationid": "525119b8796af044768ee0db"}
+	$ 
 
 ###retrieve most recent notification
 ####/notification/get/
-#####{endpoint}/api/notification/get/<userid>
+#####{endpoint}/api/notification/get/&lt;userid&gt;
 	userid: your generated userid
 	
 	returns: httpebble-friendly json-encoded notification (source and text)
+	
+	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/get/5250a011dabae068d13ee5f4/525119b8796af044768ee0db"
+	{"1": "Test", "2": "HelloWorld"}
+	$ 
 
 ###retrieve notification
 ####/notification/get/
-#####{endpoint}/api/notification/get/<userid>/<notificationid>
+#####{endpoint}/api/notification/get/&lt;userid&gt;/&lt;notificationid&gt;
 	userid: your generated userid
 	notificationid: the notificationid returned from a previous `/notification/create/` call
 
 	returns: httpebble-friendly json-encoded notification (source and text)
+	
+	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/get/5250a011dabae068d13ee5f4"
+	{"1": "Test", "2": "HelloWorld"}
+	$
 
 
 ###mark most recent notification as delivered
 ####/notification/delivered/
-#####{endpoint}/api/notification/delivered/<userid>
+#####{endpoint}/api/notification/delivered/&lt;userid&gt;
 	userid: your generated userid
 
 	returns: json-encoded success or failure
+	
+	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/delivered/5250a011dabae068d13ee5f4"
+	{"status": "success"}
+	$
 
 

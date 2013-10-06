@@ -22,7 +22,10 @@
 		}
 		else if ($_REQUEST['submit'] == "get") {
 			$url = $url."?".str_replace('+', '%20', http_build_query($post_data));
-			$response = file_get_contents($url);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$response = curl_exec($ch);
+			curl_close($ch);
 		}
 	}
 ?>
