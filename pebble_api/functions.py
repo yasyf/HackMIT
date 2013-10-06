@@ -48,7 +48,9 @@ def get_notification(notificationid, userid):
 	return json.dumps({"1": obj["source"], "2": obj["text"]})
 
 def get_most_recent_notification(userid):
-	notificationid = str(notifications.find({"userid": userid}).sort("time", -1)[0]["_id"])
+	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
+		return json_encode("error", "no new messages")
+	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
 	return get_notification(notificationid, userid)
 
 def compare_ids(userid, notificationid):
@@ -57,9 +59,10 @@ def compare_ids(userid, notificationid):
 def show_error(text):
 	return json_encode("error",text)
 		
-def mark_notification_delivered(notificationid, delivered):
+def mark_notification_delivered(userid, delivered):
 	if delivered == True:
 		status = "true"
 	else:
 		status = "false"
+	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
 	return str(notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}}))

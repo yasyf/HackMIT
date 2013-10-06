@@ -58,6 +58,14 @@ def retreive_notification(userid, notificationid):
 	else:
 		return show_error("invalid notificationid for this userid")
 
+@app.route('/api/notification/delivered/<userid>', methods=['POST', 'GET'])
+def notification_delivered(userid):
+	if check_userid(userid):
+		mark_notification_delivered(userid, True)
+		return json_encode("status","success")
+	else:
+		return show_error("invalid notificationid for this userid")
+
 	
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8080,debug=True)
