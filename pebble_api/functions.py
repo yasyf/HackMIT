@@ -48,7 +48,7 @@ def get_notification(notificationid, userid):
 	return json.dumps({"1": obj["source"], "2": obj["text"]})
 
 def get_most_recent_notification(userid):
-	notificationid = str(notifications.find({"userid": userid}).sort("date", -1)[0]["_id"])
+	notificationid = str(notifications.find({"userid": userid}).sort("time", -1)[0]["_id"])
 	return get_notification(notificationid, userid)
 
 def compare_ids(userid, notificationid):
