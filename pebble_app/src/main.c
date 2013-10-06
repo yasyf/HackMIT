@@ -7,13 +7,14 @@
 #include "http.h"
 
 #define USERID "5250a011dabae068d13ee5f4"
-#define URL "http://yasyf.scripts.mit.edu:8080/api/notification/get/"
+#define GETURL "http://yasyf.scripts.mit.edu:8080/api/notification/get/"
+#define DELIVEREDURL "http://yasyf.scripts.mit.edu:8080/api/notification/delivered/"
   
 PBL_APP_INFO(HTTP_UUID,
              "HackMIT", "Yasyf Mohamedali",
              1, 0, /* App version */
              DEFAULT_MENU_ICON,
-             APP_INFO_STANDARD_APP);
+             APP_INFO_WATCH_FACE);
 
 Window window;
 ScrollLayer scroll_layer; 
@@ -22,10 +23,11 @@ TextLayer message_layer;
 static char* source = "HackMIT";
 static char* message = "No New Messages";
 int error = 0;
+bool confirming = false;
 
 void start_http_request() {
   DictionaryIterator *out;
-  HTTPResult result = http_out_get(URL USERID, 0, &out);
+  HTTPResult result = http_out_get(GETURL USERID, 0, &out);
   if (result != HTTP_OK) {
     error = result;
     return;
@@ -37,18 +39,34 @@ void start_http_request() {
   }
 }
 
+void start_http_request_2() {
+  DictionaryIterator *out;
+  HTTPResult result = http_out_get(DELIVEREDURL USERID, 0, &out);
+  http_out_send();
+  confirming = true;
+}
+
 void handle_http_success(int32_t request_id, int http_status, DictionaryIterator* sent, void* context) {
+  if(confirming == true){
+    confirming = false;
+    return;
+  }
   Tuple *source_tuple = dict_find(sent, 1);
   Tuple *message_tuple = dict_find(sent, 2);
   if (source_tuple && message_tuple) {
   vibes_short_pulse();
     source = source_tuple->value->cstring;
   message = message_tuple->value->cstring;
+  start_http_request_2();
   error = 0;
   }
   else if (error != 0) {
   source = "Error";
   message = "Could not connect to API";
+  }
+  else {
+  source = "HackMIT";
+  message = "No New Messages";;
   }
   text_layer_set_text(&source_layer, source);
   text_layer_set_text(&message_layer, message);
