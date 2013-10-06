@@ -7,7 +7,7 @@
 #include "http.h"
 
 #define USERID "5250a011dabae068d13ee5f4"
-#define URL "http://hackmit.yasyf.scripts.mit.edu/pebble_api/api/notification/get/"
+#define URL "http://yasyf.scripts.mit.edu:8080/api/notification/get/"
   
 PBL_APP_INFO(HTTP_UUID,
              "HackMIT", "Yasyf Mohamedali",
@@ -18,8 +18,8 @@ PBL_APP_INFO(HTTP_UUID,
 Window window;
 TextLayer source_layer;
 TextLayer message_layer;
-static char* source;
-static char* message;
+static char* source = "HackMIT";
+static char* message = "No New Messages";
 int error = 0;
 
 void start_http_request() {
@@ -37,17 +37,27 @@ void start_http_request() {
 }
 
 void handle_http_success(int32_t request_id, int http_status, DictionaryIterator* sent, void* context) {
-  Tuple *source_tuple = dict_find(sent, 3);
-  Tuple *message_tuple = dict_find(sent, 1);
+  Tuple *source_tuple = dict_find(sent, 1);
+  Tuple *message_tuple = dict_find(sent, 2);
   if (source_tuple && message_tuple) {
-    memcpy(source, source_tuple->value->cstring, source_tuple->length);
-  memcpy(message, message_tuple->value->cstring, message_tuple->length);
-  }
+    source = source_tuple->value->cstring;
+  message = message_tuple->value->cstring;
   error = 0;
+  }
+  else {
+  source = "Error";
+  message = "Could not connect to API";
+  }
+  text_layer_set_text(&source_layer, source);
+  text_layer_set_text(&message_layer, message);
 }
 
 void handle_http_failure(int32_t request_id, int http_status, void* context) {
   error = http_status;
+}
+
+void handle_tick(AppContextRef app_ctx, PebbleTickEvent *t) {
+  start_http_request();
 }
 
 void handle_init(AppContextRef ctx) {
@@ -72,7 +82,23 @@ void handle_init(AppContextRef ctx) {
 
 void pbl_main(void *params) {
   PebbleAppHandlers handlers = {
-    .init_handler = &handle_init
+    .init_handler = &handle_init,
+    .tick_info = {
+      .tick_handler = &handle_tick,
+      .tick_units = MINUTE_UNIT
+    },
+    .messaging_info = {
+      .buffer_sizes = {
+        .inbound = 124,
+        .outbound = 124,
+      }
+    }
   };
+  HTTPCallbacks http_callbacks = {
+    .failure = handle_http_failure,
+    .success = handle_http_success
+  };
+  http_register_callbacks(http_callbacks, NULL);
+
   app_event_loop(params, &handlers);
 }

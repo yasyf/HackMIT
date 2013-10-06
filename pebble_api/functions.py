@@ -45,9 +45,7 @@ def create_notification(userid, source, text):
 
 def get_notification(notificationid, userid):
 	obj = notifications.find({"_id": ObjectId(notificationid), "userid": userid})[0]
-	del obj["_id"]
-	obj["time"] = calendar.timegm(obj["time"].timetuple())
-	return json.dumps(obj)
+	return json.dumps({"1": obj["source"], "2": obj["text"]})
 
 def get_most_recent_notification(userid):
 	notificationid = str(notifications.find({"userid": userid}).sort("date", -1)[0]["_id"])
