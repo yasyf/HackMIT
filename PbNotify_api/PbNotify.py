@@ -13,13 +13,18 @@ app.secret_key = open('sk.txt',"r").read().strip()
 @app.route('/')
 def index():
 	if 'userid' in session:
-		return render_template('index.html')
+		return render_template('index.html', notifications=get_notifications(session["userid"]))
 	else:
 		return redirect(url_for('login', error="You must log in to do that."))
 
 @app.route('/sms')
 def sms_response():
 	return twilio_sms_response(request.values.get('Body', ''))
+
+@app.route('/logout')
+def logout():
+	session.pop('userid')
+	return redirect(url_for('index'))
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -36,7 +41,7 @@ def login():
 			return render_template('login.html',error="Your credentials were invalid.")
 	else:
 		if 'userid' in session:
-			return redirect(url_for('login'))
+			return redirect(url_for('index'))
 		else:
 			return render_template('login.html',error=request.args.get('error', ''))
 

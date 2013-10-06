@@ -74,6 +74,9 @@ def get_notification(notificationid, userid):
 	obj = notifications.find({"_id": ObjectId(notificationid), "userid": userid})[0]
 	return json.dumps({"1": obj["source"], "2": obj["text"]})
 
+def get_notifications(userid):
+	return notifications.find({"userid": userid})
+
 def get_most_recent_notification(userid):
 	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
 		return json_encode("error", "no new messages")

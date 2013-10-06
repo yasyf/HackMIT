@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 {% block title %}Welcome{% endblock %}
 {% block content %}
-  <h1>Welcome To PbNotify, The Remote Pebble Notification API</h1>
-  <p>userid: {{ session.userid }}</p>
+  <h1>PbNotify: The Pebble Notification API</h1>
+  <p>your userid is <b>{{ session.userid }}</b></p>
 	<div>
 	 <ul>
 	  {% for notification in notifications %}
-	  	<li>(<i>{{ notification.date }}</i>) <b>{{ notification.text }}</b>: {{ notification.text }}</li>
+	  	{% if notification.delivered %} <del> {% endif %}
+		<li>(<i>{{ notification.time }}</i>) <b>{{ notification.text }}</b>: {{ notification.text }}</li>
+		{% if notification.delivered %} </del> {% endif %}
 	  {% endfor %}
 	 </ul>
 	</div>
