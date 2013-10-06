@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Developed by Yasyf Mohamedali @ HackMIT 2013
+# https://github.com/yasyf/HackMIT
+
 import hashlib, datetime, json, calendar
 from pymongo import MongoClient
 from bson.objectid import ObjectId

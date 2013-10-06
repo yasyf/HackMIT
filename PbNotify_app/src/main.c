@@ -55,20 +55,20 @@ void handle_http_success(int32_t request_id, int http_status, DictionaryIterator
   Tuple *source_tuple = dict_find(sent, 1);
   Tuple *message_tuple = dict_find(sent, 2);
   if (source_tuple && message_tuple) {
-	vibes_short_pulse();
+  vibes_short_pulse();
     source = source_tuple->value->cstring;
-	message = message_tuple->value->cstring;
-	start_http_request_2();
-	error = 0;
+  message = message_tuple->value->cstring;
+  start_http_request_2();
+  error = 0;
   }
   else if (error != 0) {
-	source = "Error";
-	message = "Could not connect to API";
+  source = "Error";
+  message = "Could not connect to API";
   }
   else {
-	//source = "HackMIT";
-	//message = "No New Messages";
-	return;
+  //source = "HackMIT";
+  //message = "No New Messages";
+  return;
   }
   text_layer_set_text(&source_layer, source);
   text_layer_set_text(&message_layer, message);
@@ -91,7 +91,7 @@ void handle_init(AppContextRef ctx) {
   
   window_init(&window, "HackMIT");
   window_stack_push(&window, true /* Animated */);
-	
+  
   window_set_click_config_provider(&window, (ClickConfigProvider) config_provider);
   
   text_layer_init(&source_layer, GRect(-5, 0, 144, 30));
@@ -99,7 +99,7 @@ void handle_init(AppContextRef ctx) {
   text_layer_set_text(&source_layer, source);
   text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &source_layer.layer);
-	
+  
   scroll_layer_init(&scroll_layer, GRect(-5, 30, 155, 110));
   scroll_layer_set_click_config_onto_window(&scroll_layer, &window);
   
@@ -110,7 +110,7 @@ void handle_init(AppContextRef ctx) {
   
   GSize max_size = text_layer_get_max_used_size(app_get_current_graphics_context(), &message_layer);
   scroll_layer_set_content_size(&scroll_layer, GSize(150, max_size.h));
-	
+  
   scroll_layer_add_child(&scroll_layer, &message_layer.layer);
   layer_add_child(&window.layer, (Layer*)&scroll_layer);
 }

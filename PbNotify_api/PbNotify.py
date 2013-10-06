@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+# Developed by Yasyf Mohamedali @ HackMIT 2013
+# https://github.com/yasyf/HackMIT
+
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 from functions import *
 
 app = Flask(__name__)
-app.secret_key = '\x0f?\xad6\x19\xfe\x1b\x1buy1" \xb14\x94\xeb2L\x85\x9e\x04RR'
+app.secret_key = open('sk.txt',"r").read().strip()
 
 	
 @app.route('/')
@@ -68,4 +71,4 @@ def notification_delivered(userid):
 
 	
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(host='0.0.0.0',port=8080,debug=False)
