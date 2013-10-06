@@ -44,6 +44,13 @@ def new_notification(userid, source, text):
 		error = "invalid userid"
 	return show_error(error)
 
+@app.route('/api/notification/get/<userid>', methods=['POST', 'GET'])
+def retreive_most_recent_notification(userid):
+	if check_userid(userid):
+		return get_most_recent_notification(userid)
+	else:
+		return show_error("invalid userid")
+
 @app.route('/api/notification/get/<userid>/<notificationid>', methods=['POST', 'GET'])
 def retreive_notification(userid, notificationid):
 	if check_userid(userid) and check_notificationid(notificationid) and compare_ids(userid, notificationid):

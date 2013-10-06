@@ -49,6 +49,10 @@ def get_notification(notificationid, userid):
 	obj["time"] = calendar.timegm(obj["time"].timetuple())
 	return json.dumps(obj)
 
+def get_most_recent_notification(userid):
+	notificationid = str(notifications.find({"userid": userid}).sort("date", -1)[0]["_id"])
+	return get_notification(notificationid, userid)
+
 def compare_ids(userid, notificationid):
 	return (userid == notifications.find({"_id": ObjectId(notificationid)})[0]["userid"])
 	
