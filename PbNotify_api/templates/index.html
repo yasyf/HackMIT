@@ -2,7 +2,7 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>Welcome To PbNotify, The Remote Pebble Notification API</h1>
-  <p>User: {{ session.userid }}</p>
+  <p>userid: {{ session.userid }}</p>
 	<div>
 	 <ul>
 	  {% for notification in notifications %}
