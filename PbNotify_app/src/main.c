@@ -29,6 +29,7 @@ static char* source = "PbNotify";
 static char* message = "No New Messages";
 int error = 0;
 bool confirming = false;
+int counter = 0;
 
 void start_http_request() {
   DictionaryIterator *out;
@@ -83,7 +84,14 @@ void handle_http_failure(int32_t request_id, int http_status, void* context) {
 }
 
 void handle_tick(AppContextRef app_ctx, PebbleTickEvent *t) {
-  start_http_request();
+  if(counter > 10){
+    counter = 0;
+    start_http_request();
+  }
+  else{
+    counter++;
+  }
+  
 }
 
 void config_provider(ClickConfig **config, Window *window) {
@@ -117,6 +125,8 @@ void handle_init(AppContextRef ctx) {
   
   scroll_layer_add_child(&scroll_layer, &message_layer.layer);
   layer_add_child(&window.layer, (Layer*)&scroll_layer);
+
+  start_http_request();
 }
 
 void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) {

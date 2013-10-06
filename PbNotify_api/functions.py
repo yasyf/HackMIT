@@ -7,12 +7,33 @@ import hashlib, datetime, json, calendar
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import json_util
+import twilio.twiml
 
 client = MongoClient(open('db.txt',"r").read().strip())
 db = client.hackmit
 users = db.users
 notifications = db.notifications
 
+def twilio_sms_response(body):
+	components = body.split("|")
+	if len(components) != 3:
+		response = "sms must be in the format of <userid>|<source>|<text>"
+	else:
+		userid = components[0]
+		source = components[1]
+		text = components[2]
+		
+		if check_userid(userid):
+			if len(source) > 0 and len(text) > 0:
+				response = create_notification(userid, source, text)
+			else:
+				response = "missing required parameter"
+		else:
+			response = "invalid userid"
+	resp = twilio.twiml.Response()
+	resp.message(response)
+	return str(resp)
+	
 def isset_credentials(username, password):
 	return (len(username) > 0) and (len(password) > 0)
 
@@ -26,7 +47,10 @@ def get_userid(username):
 	return str(users.find({"username": username})[0]["_id"])
 
 def check_userid(userid):
-	return (users.find({"_id": ObjectId(userid)}).count() == 1)
+	try:
+		return (users.find({"_id": ObjectId(userid)}).count() == 1)
+	except Exception:
+		return False
 
 def check_notificationid(notificationid):
 	return (notifications.find({"_id": ObjectId(notificationid)}).count() == 1)

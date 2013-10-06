@@ -17,6 +17,10 @@ def index():
 	else:
 		return redirect(url_for('login', error="You must log in to do that."))
 
+@app.route('/sms')
+def sms_response():
+	return twilio_sms_response(request.values.get('Body', ''))
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
