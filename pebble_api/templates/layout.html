@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}{% endblock %} - PebbleAPI</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content">{% block content %}{% endblock %}</div>
+	<br /><br />
+    <div id="footer" style="font-size:small;">
+      {% block footer %}
+      Pebble Notification API by Yasyf Mohamedali. A #hackMIT product.
+      {% endblock %}
+    </div>
+  </body>
+</html>
