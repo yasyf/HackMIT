@@ -61,7 +61,8 @@ void handle_http_success(int32_t request_id, int http_status, DictionaryIterator
   Tuple *message_tuple = dict_find(sent, 2);
   if (source_tuple && message_tuple) {
   vibes_short_pulse();
-    source = source_tuple->value->cstring;
+  light_enable_interaction();
+  source = source_tuple->value->cstring;
   message = message_tuple->value->cstring;
   start_http_request_2();
   error = 0;
