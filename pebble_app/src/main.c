@@ -68,13 +68,13 @@ void handle_init(AppContextRef ctx) {
   
   text_layer_init(&source_layer, GRect(0, 0, 144, 30));
   text_layer_set_text_alignment(&source_layer, GTextAlignmentCenter);
-  text_layer_set_text(&source_layer, "Source");
+  text_layer_set_text(&source_layer, source);
   text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &source_layer.layer);
   
   text_layer_init(&message_layer, GRect(0,40, 144, 30));
   text_layer_set_text_alignment(&message_layer, GTextAlignmentCenter);
-  text_layer_set_text(&message_layer, "Message");
+  text_layer_set_text(&message_layer, message);
   text_layer_set_font(&message_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &message_layer.layer);
 }
@@ -85,7 +85,7 @@ void pbl_main(void *params) {
     .init_handler = &handle_init,
     .tick_info = {
       .tick_handler = &handle_tick,
-      .tick_units = MINUTE_UNIT
+      .tick_units = 30
     },
     .messaging_info = {
       .buffer_sizes = {
