@@ -59,8 +59,9 @@ def new_notification(userid, source, text):
 @app.route('/api/notification/get/<userid>', methods=['POST', 'GET'])
 def retreive_most_recent_notification(userid):
 	if check_userid(userid):
+		resp = get_most_recent_notification(userid)
 		mark_notification_delivered(userid, True) #temp fix for httpebble mixing up calls
-		return Response(response=get_most_recent_notification(userid), status=200, mimetype="application/json")
+		return Response(response=resp, status=200, mimetype="application/json")
 	else:
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 

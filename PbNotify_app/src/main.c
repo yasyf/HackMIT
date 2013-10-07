@@ -127,10 +127,10 @@ void handle_init(AppContextRef ctx) {
   window_init(&window, "PbNotify");
   window_stack_push(&window, true /* Animated */);
     
-  text_layer_init(&source_layer, GRect(0, 0, 144, 30));
+  text_layer_init(&source_layer, GRect(-5, 0, 144, 30));
   text_layer_set_text_alignment(&source_layer, GTextAlignmentCenter);
   text_layer_set_text(&source_layer, source);
-  text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  text_layer_set_font(&source_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
   layer_add_child(&window.layer, &source_layer.layer);
   
   scroll_layer_init(&scroll_layer, GRect(0, 40, 144, 110));
