@@ -3,7 +3,7 @@
 # Developed by Yasyf Mohamedali @ HackMIT 2013
 # https://github.com/yasyf/HackMIT
 
-from flask import Flask, session, redirect, url_for, escape, request, render_template
+from flask import Flask, Response, session, redirect, url_for, escape, request, render_template
 from functions import *
 
 app = Flask(__name__)
@@ -49,34 +49,34 @@ def login():
 def new_notification(userid, source, text):
 	if check_userid(userid):
 		if len(source) > 0 and len(text) > 0:
-			return create_notification(userid, source, text)
+			return Response(response=create_notification(userid, source, text), status=200, mimetype="application/json")
 		else:
 			error = "missing required parameter"
 	else:
 		error = "invalid userid"
-	return show_error(error)
+	return Response(response=show_error(error), status=200, mimetype="application/json")
 
 @app.route('/api/notification/get/<userid>', methods=['POST', 'GET'])
 def retreive_most_recent_notification(userid):
 	if check_userid(userid):
-		return get_most_recent_notification(userid)
+		return Response(response=get_most_recent_notification(userid), status=200, mimetype="application/json")
 	else:
-		return show_error("invalid userid")
+		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 
 @app.route('/api/notification/get/<userid>/<notificationid>', methods=['POST', 'GET'])
 def retreive_notification(userid, notificationid):
 	if check_userid(userid) and check_notificationid(notificationid) and compare_ids(userid, notificationid):
-		return get_notification(notificationid, userid)
+		return Response(response=get_notification(notificationid, userid), status=200, mimetype="application/json")
 	else:
-		return show_error("invalid notificationid for this userid")
+		return Response(response=show_error("invalid notificationid for this userid"), status=200, mimetype="application/json")
 
 @app.route('/api/notification/delivered/<userid>', methods=['POST', 'GET'])
 def notification_delivered(userid):
 	if check_userid(userid):
 		mark_notification_delivered(userid, True)
-		return json_encode("status","success")
+		return Response(response=json_encode("status","success"), status=200, mimetype="application/json")
 	else:
-		return show_error("invalid notificationid for this userid")
+		return Response(response=show_error("invalid notificationid for this userid"), status=200, mimetype="application/json")
 
 	
 if __name__ == '__main__':
