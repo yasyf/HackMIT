@@ -3,7 +3,7 @@
 # Developed by Yasyf Mohamedali @ HackMIT 2013
 # https://github.com/yasyf/HackMIT
 
-import hashlib, datetime, json, calendar
+import hashlib, datetime, json, calendar, collections
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import json_util
@@ -59,27 +59,25 @@ def sha1(text):
 	m = hashlib.sha1()
 	m.update(text)
 	return m.hexdigest()
-
-def json_encode(k,v):
-	return json.dumps({k: v})
-
 	
 def create_user(username, password):
 	return str(users.insert({"username": username, "password": sha1(password)}))
 	
 def create_notification(userid, source, text):
-	return json_encode("notificationid", str(notifications.insert({"userid": userid, "time": datetime.datetime.utcnow(), "source": source, "text": text, "delivered": "false"})))
+	return json.dumps({"1": "notificationid", "2": str(notifications.insert({"userid": userid, "time": datetime.datetime.utcnow(), "source": source, "text": text, "delivered": "false"}))})
+
 
 def get_notification(notificationid, userid):
 	obj = notifications.find({"_id": ObjectId(notificationid), "userid": userid})[0]
-	return json.dumps({"1": obj["source"], "2": obj["text"]})
+	obj2 = {"1": "source", "2": obj["source"], "3": "text", "4": obj["text"]}
+	return json.dumps(collections.OrderedDict(sorted(obj2.items())))
 
 def get_notifications(userid):
-	return notifications.find({"userid": userid})
+	return notifications.find({"userid": userid}).sort("time", -1)
 
 def get_most_recent_notification(userid):
 	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
-		return json_encode("error", "no new messages")
+		return json.dumps({"1": "error", "2": "no new messages"})
 	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
 	return get_notification(notificationid, userid)
 
@@ -87,14 +85,15 @@ def compare_ids(userid, notificationid):
 	return (userid == notifications.find({"_id": ObjectId(notificationid)})[0]["userid"])
 	
 def show_error(text):
-	return json_encode("error",text)
+	return json.dumps({"1": "error", "2": text})
 		
 def mark_notification_delivered(userid, delivered):
 	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
-			return json_encode("error", "no new messages")
+		return json.dumps({"1": "error", "2": "no new messages"})
 	if delivered == True:
 		status = "true"
 	else:
 		status = "false"
 	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
-	return str(notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}}))
+	notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}})
+	return json.dumps({"1": "notificationid", "2": notificationid})
